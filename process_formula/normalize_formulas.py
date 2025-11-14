@@ -25,6 +25,12 @@ class NormalizeFormula:
             self.replace_hskip_to_hspace(str(v)).replace("\r", " ").strip()
             for v in input_data
         ]
+        
+        # 将 \big 系列命令替换为无大括号版本
+        after_content = [
+            self.replace_big_to_big(str(v)).replace("\r", " ").strip()
+            for v in after_content
+        ]
 
         if not self.check_node():
             raise NormalizeFormulaError("Node.js was not installed correctly!")
@@ -65,6 +71,13 @@ class NormalizeFormula:
         replacement = r"hspace{\1\2}"
         output_string = re.sub(pattern, replacement, input_string)
         return output_string
+    
+    def replace_big_to_big(self, input_string: str) -> str:
+        big_series = ["big", "Big", "bigg", "Bigg"]
+        pattern = r"\\(" + "|".join(big_series) + r")\{(.*?)\}"
+        replacement = r"\\\1\2"
+        output_string = re.sub(pattern, replacement, input_string)
+        return output_string
 
     @staticmethod
     def read_txt(txt_path: Union[Path, str]) -> List[str]:
@@ -90,7 +103,7 @@ class NormalizeFormula:
         try:
             result = subprocess.run(
                 cmd,
-                input="\n".join(after_content),
+                input="\n<=<=<=E=N=D=>=>=>\n".join(after_content),
                 capture_output=True,
                 text=True,
                 check=True,
