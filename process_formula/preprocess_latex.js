@@ -52,7 +52,7 @@ function handleInputChunk(rawInput = "") {
 		console.log("");
 		return;
 	}
-	const sanitizedLine = stripLabel(preprocessed);
+	const sanitizedLine = stripFormulaWrappers(stripLabel(preprocessed));
 	try {
 		if (process.argv[2] === "tokenize") {
 			katex.__parse(sanitizedLine, {});
@@ -81,6 +81,11 @@ function handleInputChunk(rawInput = "") {
 
 function stripLabel(content) {
 	return content.replace(/\\label\s*{.*?}/g, "");
+}
+
+// Strip \[ \] 
+function stripFormulaWrappers(formula) {
+	return formula.replace(/^\\\[\s*/, "").replace(/\s*\\\]$/, "");
 }
 
 function preprocessLine(input) {
