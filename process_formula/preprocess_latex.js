@@ -85,7 +85,7 @@ function stripLabel(content) {
 
 // Strip \[ \] 
 function stripFormulaWrappers(formula) {
-	return formula.replace(/^\\\[\s*/, "").replace(/\s*\\\]$/, "");
+	return (formula.replace(/\\\[\s*/g, "").replace(/\s*\\\]/g, ""));
 }
 
 function preprocessLine(input) {
